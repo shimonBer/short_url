@@ -13,12 +13,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/encode', (req, res) => {
-  let linkToEncode: string = req.body.link;
+  const linkToEncode: string = req.body.link;
   res.json(handleLinkShorten(linkToEncode));
 });
 
 app.post('/decode', (req, res) => {
-  let linkToDecode: string = req.body.link;
+  const linkToDecode: string = req.body.link;
   res.json(handleLinkToOriginal(linkToDecode));
 });
 

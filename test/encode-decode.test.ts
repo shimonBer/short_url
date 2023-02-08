@@ -12,7 +12,7 @@ async function generateRequest(endpoint: string, link: string): Promise<Record<s
   })).json();
 }
 describe('encode - decode - sucess', () => {
-    let originalLink = "http://test.com";
+    const originalLink = "http://test.com";
     let resLink = '';
 
   test('encode - success', async() => {
