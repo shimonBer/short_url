@@ -1,0 +1,1 @@
+export const DOMAIN: string = 'http://shorturl.com/';
