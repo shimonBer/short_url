@@ -1,0 +1,50 @@
+########
+Install
+
+npm i
+########
+Run
+
+npm run start
+########
+Test
+
+npm run Test
+########
+Usage
+
+API endpoints:
+1. encode:
+Run a post request to the address http://localhost:3000/encode
+provide a body in the shape:
+{
+  'link': '<your link>'
+}
+Dont forget to provide the header: {Content-Type: application/json}
+Response:
+In case of success:
+{
+  "res": "the resulted short link"
+}
+In case of failure:
+{
+  "err": "error messege"
+}
+
+2. decode:
+Run a post request to the address http://localhost:3000/decode
+provide a body in the shape:
+{
+  'link': '<your link>'
+}
+Dont forget to provide the header: {Content-Type: application/json}
+Response:
+In case of success:
+{
+  "res": "the original link"
+}
+In case of failure:
+{
+  "err": "error messege"
+}
+########

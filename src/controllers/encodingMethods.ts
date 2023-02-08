@@ -1,10 +1,10 @@
 import crypto from "crypto";
-import { DOMAIN } from "../constants";
+import { DOMAIN, LINK_EMPTY_ERROR, LINK_NOT_FOUND_ERROR, LINK_NOT_VALID_ERROR, LINK_NOT_PROCESSED_ERROR } from "../constants";
 import { results } from "../db";
 
 const hashString: StringManipulation = (str) => {
     const hash: string = crypto.createHash('md5').update(str).digest('hex');
-    return hash as string;
+    return hash;
 }
 
 const encode: StringManipulation = (str) => {
@@ -12,20 +12,27 @@ const encode: StringManipulation = (str) => {
     return buff.toString('base64');
 }
 
-export const encodeString:StringRes = (str) => {
-    if(!str) return {err: "Link can't be empty"};
+export const handleLinkShorten:StringRes = (str) => {
+    if(!str) return {err: LINK_EMPTY_ERROR};
+    try{
+        const hashedString = hashString(str);
+        // We will take the 7 first characters, which allow us 62^7 different urls
+        let res = encode(hashedString).slice(0,7)
+        results[res] = str;
+        return {res: DOMAIN + res};  
 
-    const hashedString = hashString(str);
-    let res = encode(hashedString).slice(0,7)
-
-    results[res] = str;
-    return {res: DOMAIN + res};
-    
+    } catch(e){
+        return {err: LINK_NOT_PROCESSED_ERROR};
+    }
 }
 
-export const decodeString: StringRes = (str) => {
-    if(!str) return {err: "Link can't be empty"};
-    const hashedStr = str.match(/([^\/]+$)/);
-    if(hashedStr.length) return {res: results[hashedStr[0]]};
-    else return {err: "Link couldn't be found"};
+export const handleLinkToOriginal: StringRes = (str) => {
+    if(!str) return {err: LINK_EMPTY_ERROR};
+    //get the last part only
+    const matchedString: Array<string> | null = str.match(/([^\/]+$)/);
+    if(matchedString && matchedString.length > 0){
+        let originalLink = results[matchedString[0]];
+        if(!originalLink) return {err: LINK_NOT_FOUND_ERROR};
+        return {res: results[matchedString[0]]};
+    } return { err: LINK_NOT_VALID_ERROR};
 }
